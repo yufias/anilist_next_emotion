@@ -5,6 +5,9 @@ export const AnimeListStyle = {
     textColor: css`
         color: ${globalStyle.colors.blue[70]}
     `,
+    pageTitle: css`
+        margin-left: 0.6rem;
+    `,
     listContainer: css`
         display: flex;
         flex-wrap: wrap;

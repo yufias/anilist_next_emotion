@@ -12,7 +12,7 @@ export const ContainerStyle = (props) => (css`
 
     // small devices (576 and below)
     @media (max-width: 576px) {
-        margin-bottom: 4rem;
+        margin-bottom: 6rem;
     }
 
     ` 

@@ -56,6 +56,7 @@ const AnimeList = () => {
     return(
         <Layout>
             <Container>
+                <h2 css={AnimeListStyle.pageTitle}>List Anime</h2>
                 <div css={AnimeListStyle.listContainer}>
                     {loading || networkStatus == NetworkStatus.refetch ? (
                         <Loading />

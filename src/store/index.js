@@ -1,15 +1,23 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
 const AppContext = createContext();
 
 export function AppWrapper({ children }) {
-  let sharedState = {/* whatever you want */}
+    const [collectionContext, setCollectionContext] = useState([])
 
-  return (
-    <AppContext.Provider value={sharedState}>
-      {children}
-    </AppContext.Provider>
-  );
+    useEffect(() => {
+        //
+    }, [])
+
+    const updateCollection = (newCollection) => {
+        setCollectionContext(newCollection)
+    }
+
+    return (
+        <AppContext.Provider value={{collectionContext, updateCollection}}>
+            {children}
+        </AppContext.Provider>
+    );
 }
 
 export function useAppContext() {

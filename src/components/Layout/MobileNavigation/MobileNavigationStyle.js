@@ -19,6 +19,14 @@ export const MobileNavigationStyle = {
     mobileNav: css`
         display: flex;
         justify-content: space-evenly;
+    `,
+    linkStyle: css`
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    `,
+    linkLabel: css`
+        font-size: 10px;
     `
 
 }

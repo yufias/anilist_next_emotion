@@ -1,7 +1,14 @@
 /** @jsxImportSource @emotion/react */
+import { useEffect, useState } from 'react'
 import { PaginationStyle } from './PaginationStyle'
 
 const Pagination = ({ page, totalPage, changePage }) => {
+    const [isMobile, setisMobile] = useState(false)
+
+    useEffect(() => {
+        window.innerWidth < 576 ? setisMobile(true) : setisMobile(false)
+    }, [])
+
     return(
         <div css={PaginationStyle.paginationWrapper}>
             <div css={PaginationStyle.page} onClick={() => changePage(1)}>
@@ -14,7 +21,7 @@ const Pagination = ({ page, totalPage, changePage }) => {
                     &lt;
                 </span>
             </div>
-            {Array.from({ length: 10 - page }, (_, i) => {
+            {Array.from({ length: isMobile ? 5 - page : 10 - page }, (_, i) => {
                 return(
                     <div key={i} css={page+i == page ? [PaginationStyle.page, PaginationStyle.active] : PaginationStyle.page}  onClick={() => changePage(page+1)}>
                         <span key={page+i}>{page+i}</span>
