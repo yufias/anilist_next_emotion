@@ -1,4 +1,5 @@
 import { css } from '@emotion/react'
+import { globalStyle } from '../../../styles/globalStyle'
 
 export const DetailAnimeStyle = {
     detailAnimeContainer: css`
@@ -59,8 +60,15 @@ export const DetailAnimeStyle = {
     chooseCollection: css`
         display: flex;
         gap: 1rem;
+        align-items: center;
     `,
     buttonContainer: css`
         width: 100%;
-    `
+    `,
+    inputCollection: css`
+        border: 1px solid ${globalStyle.colors.gray[50]};
+        padding: 0.8rem;
+        border-radius: 6px;
+        width: 100%;
+    `,
 }

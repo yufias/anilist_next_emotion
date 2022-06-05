@@ -12,12 +12,15 @@ import Modal from "../Modal"
 import Button from '../Button';
 import CollectionCard from '../CollectionCard';
 import Link from 'next/link';
+import Swal from 'sweetalert2';
 
 
 const DetailAnime = ({ id }) => {
     const [modalOpen, setModalOpen] = useState(false)
     const [collectionList, setCollectionList] = useState([])
+    const [animeExisting, setAnimeExisting] = useState([])
     const [checkedCollection, setCheckedCollection] = useState([])
+    const [newCollection, setNewCollection] = useState('')
 
     const { loading, error, data } = useQuery(GETDETAILANIME, { 
         variables: {
@@ -28,7 +31,22 @@ const DetailAnime = ({ id }) => {
 
     const initialCollectionList = () => {
         setCollectionList(JSON.parse(localStorage.getItem('anilist_collection')))
-        console.log(collectionList, "COLLECTION LIST")
+    }
+
+    const checkExistingAnime = () => {
+        let existingTmp = []
+        collectionList.forEach(collection => {
+            const findExistingId = collection.list.find(el => el.id == data.Media.id)
+
+            if(findExistingId) {
+                existingTmp.push(true)
+            } else {
+                existingTmp.push(false)
+            }
+        })
+        setAnimeExisting(existingTmp)
+
+        console.log(animeExisting, "EXISTING")
     }
 
     const handleModal = () => {
@@ -44,9 +62,34 @@ const DetailAnime = ({ id }) => {
         }
     }
 
+    const addNewCollection = () => {
+        if(!newCollection){
+            Swal.fire({
+                title: `Warning`,
+                text: `Collection name can't be empty`,
+                icon: 'warning',
+                confirmButtonText: 'Ok!',
+            })
+            return
+        }
+
+        const newCollectionList = [...collectionList, {name: newCollection, list: []}]
+        localStorage.setItem('anilist_collection', JSON.stringify(newCollectionList))
+        setCollectionList(newCollectionList)
+        setNewCollection('')
+    }
+
     const addToCollections = () => {
-        console.log(checkedCollection, "CHECKED COLLECTION")
-        console.log(data, "DETAIL ANIME")
+        if(checkedCollection.length < 1) {
+            Swal.fire({
+                title: `Failed!`,
+                text: `No collection selected`,
+                icon: 'error',
+                confirmButtonText: 'Ok',
+            })
+            return
+        }
+
         checkedCollection.forEach((item, index) => {
             const findIndex = collectionList.findIndex(el => el.name == item)
 
@@ -57,10 +100,20 @@ const DetailAnime = ({ id }) => {
             })
         })
         localStorage.setItem('anilist_collection', JSON.stringify(collectionList))
+        setCheckedCollection([])
+        handleModal()
+        checkExistingAnime()
+        Swal.fire({
+            title: `Success!`,
+            text: `Anime added to collection(s)`,
+            icon: 'success',
+            confirmButtonText: 'Awesome!',
+        })
     }
 
     useEffect(() => {
         initialCollectionList()
+        checkExistingAnime();
     }, [])
 
     if(error) {
@@ -122,24 +175,35 @@ const DetailAnime = ({ id }) => {
                                         <h3>Add anime to collection</h3>
                                     </div>
                                     <div css={DetailAnimeStyle.collectionContent}>
-                                    {collectionList.map((item, index) => {
-                                        return(
-                                            <div css={DetailAnimeStyle.chooseCollection} key={index}>
-                                                <input
-                                                    type="checkbox"
-                                                    value={item.name}
-                                                    onChange={(e) => setChecked(e)}
-                                                />
-                                                <Link href={`/collection/${item.name}`}>
-                                                    <a>
-                                                        <CollectionCard 
-                                                            label={item.name}
-                                                        />
-                                                    </a>
-                                                </Link>
-                                            </div>
-                                        )
-                                    })}
+                                    {collectionList.length < 1 ? (
+                                        <>
+                                            <span>No collection found, you can create one here first</span>
+                                            <input type="text" value={newCollection} onChange={(e) => {setNewCollection(e.target.value)}} placeholder="Input collection name" css={DetailAnimeStyle.inputCollection}></input>
+                                            <Button outline buttonTrigger={addNewCollection}>
+                                                + Create new collection
+                                            </Button>
+                                        </>
+                                    ) : (
+                                        collectionList.map((item, index) => {
+                                            return(
+                                                <div css={DetailAnimeStyle.chooseCollection} key={index}>
+                                                    <input
+                                                        type="checkbox"
+                                                        value={item.name}
+                                                        onChange={(e) => setChecked(e)}
+                                                        disabled={animeExisting[index]}
+                                                    />
+                                                    <Link href={`/collection/${item.name}`}>
+                                                        <a>
+                                                            <CollectionCard 
+                                                                label={item.name}
+                                                            />
+                                                        </a>
+                                                    </Link>
+                                                </div>
+                                            )
+                                        })
+                                    )}
                                     </div>
                                     <Button outline buttonTrigger={addToCollections}>
                                         + Add to collection(s)
