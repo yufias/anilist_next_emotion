@@ -12,7 +12,8 @@ export const CollectionCardStyle = {
         justify-content: space-between;
         align-items: center;
         &:hover {
-            background-color: ${globalStyle.colors.gray[10]}
+            background-color: ${globalStyle.colors.gray[10]};
+            cursor: pointer;
         }
 
         // xtra small devices (576 and below)
@@ -39,6 +40,11 @@ export const CollectionCardStyle = {
         // small devices (576 and up)
         @media (min-width: 576px) {
         }
+    `,
+    cardAnchor: css`
+        display: flex;
+        justify-content: space-evenly;
+        width: 100%
     `,
     deleteContainer: css`
         position: relative;

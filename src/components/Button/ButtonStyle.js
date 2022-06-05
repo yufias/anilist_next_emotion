@@ -10,6 +10,7 @@ export const ButtonStyle = {
         border: none;
         &:hover {
             background-color: ${globalStyle.colors.blue[100]};
+            cursor: pointer;
         }
     `,
     outline: css`
@@ -23,6 +24,7 @@ export const ButtonStyle = {
         font-size: 10px;
         &:hover {
             background-color: ${globalStyle.colors.red[100]};
+            cursor: pointer;
         }
     `
 }

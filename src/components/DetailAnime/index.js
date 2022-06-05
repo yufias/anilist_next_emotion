@@ -1,5 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { useState, useEffect } from 'react'
+import { unstable_batchUpdates } from 'react-dom';
+import { useRouter } from 'next/router';
 import { useQuery } from '@apollo/client';
 import { GETDETAILANIME } from '../../../queries';
 import { DetailAnimeStyle } from './DetailAnimeStyle';
@@ -17,10 +19,11 @@ import Swal from 'sweetalert2';
 
 const DetailAnime = ({ id }) => {
     const [modalOpen, setModalOpen] = useState(false)
-    const [collectionList, setCollectionList] = useState([])
+    const [collection, setCollection] = useState({})
     const [animeExisting, setAnimeExisting] = useState([])
     const [checkedCollection, setCheckedCollection] = useState([])
     const [newCollection, setNewCollection] = useState('')
+    const router = useRouter()
 
     const { loading, error, data } = useQuery(GETDETAILANIME, { 
         variables: {
@@ -30,13 +33,10 @@ const DetailAnime = ({ id }) => {
     });
 
     const initialCollectionList = () => {
-        setCollectionList(JSON.parse(localStorage.getItem('anilist_collection')))
-    }
-
-    const checkExistingAnime = () => {
         let existingTmp = []
+        const collectionList = JSON.parse(localStorage.getItem('anilist_collection'))
         collectionList.forEach(collection => {
-            const findExistingId = collection.list.find(el => el.id == data.Media.id)
+            const findExistingId = collection.list.find(el => el.id == id)
 
             if(findExistingId) {
                 existingTmp.push(true)
@@ -44,9 +44,11 @@ const DetailAnime = ({ id }) => {
                 existingTmp.push(false)
             }
         })
-        setAnimeExisting(existingTmp)
 
-        console.log(animeExisting, "EXISTING")
+        setCollection({
+            collectionList: collectionList,
+            animeExisting: existingTmp
+        })
     }
 
     const handleModal = () => {
@@ -73,9 +75,12 @@ const DetailAnime = ({ id }) => {
             return
         }
 
-        const newCollectionList = [...collectionList, {name: newCollection, list: []}]
+        const newCollectionList = [...collection.collectionList, {name: newCollection, list: []}]
         localStorage.setItem('anilist_collection', JSON.stringify(newCollectionList))
-        setCollectionList(newCollectionList)
+        setCollection({
+            ...collection,
+            collectionList: newCollectionList
+        })
         setNewCollection('')
     }
 
@@ -91,18 +96,22 @@ const DetailAnime = ({ id }) => {
         }
 
         checkedCollection.forEach((item, index) => {
-            const findIndex = collectionList.findIndex(el => el.name == item)
+            const findIndex = collection.collectionList.findIndex(el => el.name == item)
 
-            collectionList[findIndex].list.push({
+            collection.collectionList[findIndex].list.push({
                 id: data.Media.id,
-                title: data.Media.title.english,
-                coverImage: data.Media.coverImage.large
+                title: {
+                    english: data.Media.title.english
+                },
+                coverImage: {
+                    large: data.Media.coverImage.large
+                }
             })
         })
-        localStorage.setItem('anilist_collection', JSON.stringify(collectionList))
+        localStorage.setItem('anilist_collection', JSON.stringify(collection.collectionList))
         setCheckedCollection([])
+        initialCollectionList()
         handleModal()
-        checkExistingAnime()
         Swal.fire({
             title: `Success!`,
             text: `Anime added to collection(s)`,
@@ -112,9 +121,10 @@ const DetailAnime = ({ id }) => {
     }
 
     useEffect(() => {
+        if(!router.isReady) return;
+
         initialCollectionList()
-        checkExistingAnime();
-    }, [])
+    }, [router.isReady])
 
     if(error) {
         return(
@@ -175,7 +185,7 @@ const DetailAnime = ({ id }) => {
                                         <h3>Add anime to collection</h3>
                                     </div>
                                     <div css={DetailAnimeStyle.collectionContent}>
-                                    {collectionList.length < 1 ? (
+                                    {collection.collectionList.length < 1 ? (
                                         <>
                                             <span>No collection found, you can create one here first</span>
                                             <input type="text" value={newCollection} onChange={(e) => {setNewCollection(e.target.value)}} placeholder="Input collection name" css={DetailAnimeStyle.inputCollection}></input>
@@ -184,23 +194,21 @@ const DetailAnime = ({ id }) => {
                                             </Button>
                                         </>
                                     ) : (
-                                        collectionList.map((item, index) => {
+                                        collection.collectionList.map((item, index) => {
                                             return(
                                                 <div css={DetailAnimeStyle.chooseCollection} key={index}>
-                                                    <input
-                                                        type="checkbox"
-                                                        value={item.name}
-                                                        onChange={(e) => setChecked(e)}
-                                                        disabled={animeExisting[index]}
-                                                    />
-                                                    <Link href={`/collection/${item.name}`}>
-                                                        <a>
-                                                            <CollectionCard 
-                                                                label={item.name}
-                                                            />
-                                                            <span css={animeExisting[index] ? DetailAnimeStyle.existingAnime : DetailAnimeStyle.existingAnimeFalse}>Anime Already exist</span>
-                                                        </a>
-                                                    </Link>
+                                                    <div css={DetailAnimeStyle.chooseCollectionInput}>
+                                                        <input
+                                                            type="checkbox"
+                                                            value={item.name}
+                                                            onChange={(e) => setChecked(e)}
+                                                            disabled={collection.animeExisting[index]}
+                                                        />
+                                                        <CollectionCard 
+                                                            label={item.name}
+                                                        />
+                                                    </div>
+                                                    <span css={collection.animeExisting[index] ? DetailAnimeStyle.existingAnime : DetailAnimeStyle.existingAnimeFalse}>Anime Already exist</span>
                                                 </div>
                                             )
                                         })

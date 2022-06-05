@@ -64,13 +64,10 @@ const AnimeList = () => {
                         <>
                             {data.Page.media.map((anime, index) => {
                                 return(
-                                    <Link href={`/anime_detail/${anime.id}`} key={index}>
-                                        <a css={AnimeListStyle.cardAnchor}>
-                                            <AnimeCard
-                                                detail={anime}
-                                            />
-                                        </a>
-                                    </Link>
+                                    <AnimeCard
+                                        detail={anime}
+                                        key={index}
+                                    />
                                 )
                             })}
                         </>

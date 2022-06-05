@@ -57,8 +57,6 @@ const CollectionList = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 collectionList.splice(collectionIndex, 1)
-                console.log(collectionList, "CURRENT COLLECTION")
-                console.log(collectionIndex, "INDEX")
                 localStorage.setItem('anilist_collection', JSON.stringify(collectionList))
                 initialCollectionList()
             }
@@ -86,7 +84,7 @@ const CollectionList = () => {
                         <h2>Collection List</h2>
                     </div>
                     <div css={CollectionListStyle.buttonAddModal}>
-                        <Button outline buttonTrigger={handleModal}>
+                        <Button buttonTrigger={handleModal}>
                             + Add new
                         </Button>
                     </div>
@@ -98,14 +96,11 @@ const CollectionList = () => {
                         ) : (
                             collectionList.map((item, index) => {
                                 return(
-                                    <Link href={`/collection/${item.name}`}  key={index}>
-                                        <a>
-                                            <CollectionCard 
-                                                label={item.name}
-                                                deleteCollection={deleteCollection}
-                                            />
-                                        </a>
-                                    </Link>
+                                    <CollectionCard 
+                                        key={index}
+                                        label={item.name}
+                                        deleteCollection={deleteCollection}
+                                    />
                                 )
                             })
                         )}
@@ -118,7 +113,7 @@ const CollectionList = () => {
                             <div css={CollectionListStyle.addCollectionContainer}>
                                 <h3>Add new collection</h3>
                                 <input type="text" value={newCollection} onChange={(e) => {setNewCollection(e.target.value)}} placeholder="Input collection name" css={CollectionListStyle.inputCollection}></input>
-                                <Button outline buttonTrigger={addNewCollection}>
+                                <Button buttonTrigger={addNewCollection}>
                                     +
                                 </Button>
                             </div>

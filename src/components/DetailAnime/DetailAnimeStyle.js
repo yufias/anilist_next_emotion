@@ -59,8 +59,13 @@ export const DetailAnimeStyle = {
     `,
     chooseCollection: css`
         display: flex;
-        gap: 1rem;
+        flex-direction: column;
         align-items: center;
+    `,
+    chooseCollectionInput: css`
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
     `,
     buttonContainer: css`
         width: 100%;
@@ -76,6 +81,7 @@ export const DetailAnimeStyle = {
         display: block;
         font-size: 8px;
         float: right;
+        width: inherit;
     `,
     existingAnimeFalse: css`
         display: none;

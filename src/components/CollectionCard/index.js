@@ -9,17 +9,21 @@ import Button from '../Button'
 const CollectionCard = ({ label, deleteCollection }) => {
     return(
         <div css={CollectionCardStyle.collectionCard}>
-            <div>
-                <Image
-                    src={FolderIcon}
-                    alt="collection"
-                    height="14"
-                    width="14"
-                />
-            </div>
-            <div css={CollectionCardStyle.collectionLabel}>
-                <span>{label}</span>
-            </div>
+            <Link href={`/collection/${label}`}>
+                <a css={CollectionCardStyle.cardAnchor}>
+                    <div>
+                        <Image
+                            src={FolderIcon}
+                            alt="collection"
+                            height="14"
+                            width="14"
+                        />
+                    </div>
+                    <div css={CollectionCardStyle.collectionLabel}>
+                        <span>{label}</span>
+                    </div>
+                </a>
+            </Link>
             <div css={deleteCollection ? CollectionCardStyle.deleteContainer : CollectionCardStyle.deleteContainerHide }>
                 <Button variant="danger" buttonTrigger={() => deleteCollection(label)}>
                     X
