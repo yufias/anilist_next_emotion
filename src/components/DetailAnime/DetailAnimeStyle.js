@@ -71,4 +71,13 @@ export const DetailAnimeStyle = {
         border-radius: 6px;
         width: 100%;
     `,
+    existingAnime: css`
+        color: ${globalStyle.colors.red[100]};
+        display: block;
+        font-size: 8px;
+        float: right;
+    `,
+    existingAnimeFalse: css`
+        display: none;
+    `
 }

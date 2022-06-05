@@ -198,6 +198,7 @@ const DetailAnime = ({ id }) => {
                                                             <CollectionCard 
                                                                 label={item.name}
                                                             />
+                                                            <span css={animeExisting[index] ? DetailAnimeStyle.existingAnime : DetailAnimeStyle.existingAnimeFalse}>Anime Already exist</span>
                                                         </a>
                                                     </Link>
                                                 </div>
