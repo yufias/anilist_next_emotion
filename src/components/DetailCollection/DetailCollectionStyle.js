@@ -1,4 +1,5 @@
 import { css } from '@emotion/react'
+import { globalStyle } from '../../../styles/globalStyle'
 
 export const DetailCollectionStyle = {
     cardAnchor: css`
@@ -34,5 +35,16 @@ export const DetailCollectionStyle = {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-evenly;
+    `,
+    modalEdit: css`
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    `,
+    editInput: css`
+        border: 1px solid ${globalStyle.colors.gray[50]};
+        padding: 0.8rem;
+        border-radius: 6px;
+        width: 100%;
     `
 }

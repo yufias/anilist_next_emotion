@@ -9,6 +9,7 @@ import AnimeCard from "../AnimeCard"
 import Modal from "../Modal"
 import Swal from "sweetalert2"
 import { globalStyle } from "../../../styles/globalStyle"
+import { find } from "domutils"
 
 const DetailCollection = ({ name }) => {
     const [collectionList, setCollectionList] = useState([])
@@ -29,7 +30,24 @@ const DetailCollection = ({ name }) => {
     }
 
     const EditCollectionName = () => {
-        console.log("HERE")
+        
+        if(!collectionName) {
+            Swal.fire({
+                title: `Warning`,
+                text: `Collection name cannot be empty`,
+                icon: 'warning',
+                confirmButtonText: 'Understood!',
+            })
+            return;
+        }
+        
+        const anilistCollection = JSON.parse(localStorage.getItem('anilist_collection'))
+        const findIndex = anilistCollection.findIndex(item => item.name == name)
+        
+        anilistCollection[findIndex].name = collectionName
+
+        localStorage.setItem('anilist_collection', JSON.stringify(anilistCollection))
+        initialCollectionList()
     }
 
     const deleteAnime = (id) => {
@@ -67,9 +85,9 @@ const DetailCollection = ({ name }) => {
                         <h2>
                             Collection {name}
                         </h2>
-                        {/* <Button>
-                            Edit
-                        </Button> */}
+                        <Button buttonTrigger={handleModal}>
+                            Edit Collection Name
+                        </Button>
                     </div>
                     <div css={DetailCollectionStyle.collectionList}>
                         {collectionList.length < 1 ? (
@@ -91,12 +109,12 @@ const DetailCollection = ({ name }) => {
                             modalOpen={modalOpen}
                             handleModal={handleModal}
                         >
-                            <div>
+                            <div css={DetailCollectionStyle.modalEdit}>
                                 <h3>Edit collection name</h3>
-                                <input type="text" value={collectionName} onChange={(e) => {setCollectionName(e.target.value)}} placeholder="Input collection name"></input>
-                                {/* <Button buttonTrigger={EditCollectionName}>
+                                <input type="text" value={collectionName} css={DetailCollectionStyle.editInput} onChange={(e) => {setCollectionName(e.target.value)}} placeholder="Input collection name"></input>
+                                <Button buttonTrigger={EditCollectionName}>
                                     Edit
-                                </Button> */}
+                                </Button>
                             </div>
                         </Modal>
                     </div>

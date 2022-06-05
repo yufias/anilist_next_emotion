@@ -20,8 +20,7 @@ export const ButtonStyle = {
     `,
     danger: css`
         background-color: ${globalStyle.colors.red[70]};
-        padding: 0.2rem;
-        font-size: 10px;
+        padding: 0.6rem;
         &:hover {
             background-color: ${globalStyle.colors.red[100]};
             cursor: pointer;

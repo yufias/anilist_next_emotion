@@ -4,7 +4,7 @@ import { globalStyle } from "../../../styles/globalStyle";
 export const CollectionCardStyle = {
     collectionCard: css`
         display: flex;
-        width: 9rem;
+        width: 12rem;
         padding: 0.5rem;
         flex-direction: row;
         border: 1px solid ${globalStyle.colors.gray[30]};
@@ -43,15 +43,22 @@ export const CollectionCardStyle = {
     `,
     cardAnchor: css`
         display: flex;
-        justify-content: space-evenly;
-        width: 100%
+        gap: 0.4rem;
+    `,
+    actionContainer: css`
+        display: flex;
     `,
     deleteContainer: css`
         position: relative;
         right: 0;
-        width: 10px;
+        width: 2rem;
     `,
-    deleteContainerHide: css`
+    containerHide: css`
         display: none;
-    `
+    `,
+    editContainer: css`
+        position: relative;
+        right: 0;
+        width: 2rem;
+    `,
 }

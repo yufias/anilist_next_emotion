@@ -8,13 +8,15 @@ import Button from "../Button"
 import CollectionCard from "../CollectionCard"
 import Swal from 'sweetalert2'
 import Modal from "../Modal"
-import Link from "next/link"
 
 
 const CollectionList = () => {
     const [collectionList, setCollectionList] = useState([])
     const [newCollection, setNewCollection] = useState('')
     const [modalOpen, setModalOpen] = useState(false)
+    const [modalOpenEdit, setModalOpenEdit] = useState(false)
+    const [collectionName, setCollectionName] = useState('')
+    const [originCollectionName, setOriginCollectionName] = useState('')
 
     const addNewCollection = () => {
         const findExisting = collectionList.find(item => item == newCollection);
@@ -68,8 +70,39 @@ const CollectionList = () => {
         setModalOpen(!modalOpen)
     }
 
+    const handleModalEditOnly = () => {
+        setModalOpenEdit(!modalOpenEdit)
+    }
+
+    const handleModalEdit = (name) => {
+        setModalOpenEdit(!modalOpenEdit)
+        setCollectionName(name)
+        setOriginCollectionName(name)
+    }
+
     const initialCollectionList = () => {
         setCollectionList(JSON.parse(localStorage.getItem('anilist_collection')))
+    }
+
+    const editCollection = () => {
+        if(!collectionName) {
+            Swal.fire({
+                title: `Warning`,
+                text: `Collection name cannot be empty`,
+                icon: 'warning',
+                confirmButtonText: 'Understood!',
+            })
+            return;
+        }
+        
+        const anilistCollection = JSON.parse(localStorage.getItem('anilist_collection'))
+        const findIndex = anilistCollection.findIndex(item => item.name == originCollectionName)
+        
+        anilistCollection[findIndex].name = collectionName
+
+        localStorage.setItem('anilist_collection', JSON.stringify(anilistCollection))
+        handleModalEditOnly()
+        initialCollectionList()
     }
 
     useEffect(() => {
@@ -100,6 +133,7 @@ const CollectionList = () => {
                                         key={index}
                                         label={item.name}
                                         deleteCollection={deleteCollection}
+                                        editCollection={handleModalEdit}
                                     />
                                 )
                             })
@@ -115,6 +149,19 @@ const CollectionList = () => {
                                 <input type="text" value={newCollection} onChange={(e) => {setNewCollection(e.target.value)}} placeholder="Input collection name" css={CollectionListStyle.inputCollection}></input>
                                 <Button buttonTrigger={addNewCollection}>
                                     +
+                                </Button>
+                            </div>
+                        </Modal>
+
+                        <Modal
+                            modalOpen={modalOpenEdit}
+                            handleModal={handleModalEditOnly}
+                        >
+                            <div css={CollectionListStyle.addCollectionContainer}>
+                                <h3>Edit collection name</h3>
+                                <input type="text" value={collectionName} onChange={(e) => {setCollectionName(e.target.value)}} placeholder="Input collection name" css={CollectionListStyle.inputCollection}></input>
+                                <Button buttonTrigger={editCollection}>
+                                    Edit
                                 </Button>
                             </div>
                         </Modal>

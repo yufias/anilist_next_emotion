@@ -12,17 +12,6 @@ const MobileNavigation = () => {
     return(
         <div css={MobileNavigationStyle.mobileNavContainer}>
             <nav css={MobileNavigationStyle.mobileNav}>
-                <Link href="/collection">
-                    <a css={MobileNavigationStyle.linkStyle}>
-                        <Image
-                            src={FileIcon}
-                            alt="collection"
-                            height="36"
-                            width="36"
-                        />
-                        <span css={MobileNavigationStyle.linkLabel}>Collection</span>
-                    </a>
-                </Link>
                 <Link href="/">
                     <a css={MobileNavigationStyle.linkStyle}>     
                         <Image
@@ -32,6 +21,17 @@ const MobileNavigation = () => {
                             width="36"
                         />
                         <span css={MobileNavigationStyle.linkLabel}>Home</span>
+                    </a>
+                </Link>
+                <Link href="/collection">
+                    <a css={MobileNavigationStyle.linkStyle}>
+                        <Image
+                            src={FileIcon}
+                            alt="collection"
+                            height="36"
+                            width="36"
+                        />
+                        <span css={MobileNavigationStyle.linkLabel}>Collection</span>
                     </a>
                 </Link>
             </nav>

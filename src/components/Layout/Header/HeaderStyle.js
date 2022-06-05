@@ -9,6 +9,7 @@ export const HeaderStyle = {
         display: flex;
         align-items: center;
         border-bottom: 1px solid gray;
+        justify-content: center;
 
         // Small devices (landscape phones, 576px and up)
         @media (max-width: 576px) {
