@@ -44,5 +44,23 @@ export const DetailAnimeStyle = {
     `,
     genreText: css`
         margin-bottom: 1rem;
+    `,
+    modalContent: css`
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+    `,
+    collectionContent: css`
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    `,
+    chooseCollection: css`
+        display: flex;
+        gap: 1rem;
+    `,
+    buttonContainer: css`
+        width: 100%;
     `
 }
